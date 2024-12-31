@@ -1,4 +1,6 @@
-export default function List() {
+export default function List({newItem}) {
+    console.log(newItem);
+    
     const ingredients = [
         "Chicken breasts",
         "Most of the main spices",
@@ -8,6 +10,10 @@ export default function List() {
         "Parmesan cheese",
         "Spinach"
     ]
+    
+    if(newItem.length > 0){
+        ingredients.push(newItem);
+    }
 
     const itemList = ingredients.map((item, index) => {
         return <li key={index} className="list-item-view">{ item }</li>
