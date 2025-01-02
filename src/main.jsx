@@ -15,10 +15,6 @@ function Sample() {
     <main>
       <h1>Is state important to know?</h1>
       <button onClick={toggle} className="sample-btn" arial-label="the answer is">{result ? "Yes" : "No"}</button>
-      {/* <div className="btn-pack">
-        <button onClick={add} className="plus-btn">+</button>
-        <button onClick={subtract} className="minus-btn">-</button>
-      </div> */}
     </main>
   )
 }
