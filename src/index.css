@@ -189,3 +189,9 @@ main {
   border-radius: 6px;
   margin-right: 41px;
 }
+.suggested-recipe-container {
+  color:#475467;
+  line-height:28px;
+  font-size:1.125rem;
+  font-weight: 400;
+}

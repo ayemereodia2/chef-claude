@@ -1,14 +1,37 @@
-import React from "react";
+import React, { useRef } from "react";
 import List from "./ingredient-list";
 import RecipeView from "./recipeview";
+import { getRecipeFromMistral } from "../../ai";
 
 export default function Search() {
   const [ingredient, setIngredients] = React.useState([]);
-  const [recipeShown, setRecipeShown] = React.useState(false)
+  const [recipeShown, setUiState] = React.useState({
+    isLoading: false,
+    recipe: null,
+    error: null
+  });
 
-  function getRecipe() {
-    setRecipeShown(prevState => !prevState)
+  async function getRecipe() {
+    try {
+    setUiState({ isLoading: true, recipe: null, error: null });
+    const recipe = await getRecipeFromMistral(ingredient);
+    setUiState({ isLoading: false, recipe, error: null });
+    console.log("data",recipe);
+    }
+    catch(err){
+      setUiState({ isLoading: false, recipe: null, error: err });
+    }
   }
+
+  const recipeRef = useRef(null);
+  console.log(recipeRef)
+
+  React.useEffect(() => {
+    if(recipeShown.recipe){
+      recipeRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+  }, [recipeShown])
 
   function handleSubmit(event) {
     event.preventDefault(); // Prevents the default form submission
@@ -38,18 +61,19 @@ export default function Search() {
         </form>
         <List newItem={ingredient} />
         {ingredient.length > 3 && (
-          <div className="get-recipe-container">
-            <div>
+          <div className="get-recipe-container"
+          >
+            <div ref={recipeRef}>
               <h3>Ready for a recipe?</h3>
               <p>Generate a recipe from your list of ingredients</p>
             </div>
-            <button onClick={getRecipe}>Get a recipe</button>
+            <button onClick={getRecipe}>{recipeShown.isLoading ? "Loading..." : "Get a recipe"}</button>
           </div>
         )}
       </div>
 
       {
-        recipeShown ? RecipeView() : null 
+        recipeShown.recipe ? RecipeView(recipeShown.recipe) : null 
       }
     </main>
   );
